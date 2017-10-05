@@ -8,6 +8,13 @@ var cnv;
 var mode = 0;
 var check;
 var mineCount = mine_size;
+var colors = [
+  [0, 0, 0],
+  [0, 0, 255],
+  [0, 200, 0],
+  [0, 200, 200],
+  [80, 0, 0]
+];
 /*
     Mode 0 is for revealing
     Mode 1 is for flagging
@@ -83,6 +90,23 @@ function draw() {
   if (checker.length == 0 && mineCount == 0)
   {
     wonGame();
+  }
+  if (mouseIsPressed && k == 1 && mode != 2 && mode != 3)
+  {
+    if (mouseButton == RIGHT)
+    {
+      k = 0;
+      //var size = 10;
+      tryToFlag();
+    }
+  }
+}
+
+function mouseReleased()
+{
+  if (mode != 2 && mode != 3) {
+  k = 1;
+  displayGrid();
   }
 }
 
@@ -182,10 +206,10 @@ function Cell(a, b, c) {
       fill(255);
       if (this.flagged == true) fill(255, 0, 0);
       if (this.val != -1 && this.val != 0) {
-        fill(200);
+        fill(220);
         stroke(0);
         rect(this.scale + this.scale * this.x, this.scale + this.scale * this.y, this.scale, this.scale);
-        fill(20*this.val, 0, 50*this.val);
+        fill(colors[this.val]);
         //stroke(0, 0, 255);
         noStroke();
           textAlign(CENTER, CENTER);
@@ -199,7 +223,7 @@ function Cell(a, b, c) {
         rect(this.scale + this.scale * this.x, this.scale + this.scale * this.y, this.scale, this.scale);
       }
       else {
-        fill(200);
+        fill(220);
         stroke(0);
         rect(this.scale + this.scale * this.x, this.scale + this.scale * this.y, this.scale, this.scale);
         fill(255, 0, 0);
@@ -291,29 +315,7 @@ function whenMouseClicked()
     if (mode == 2) lostGame();
   }
   else if (mode == 1){
-    for (var i = 0; i < size; i++) {
-      for (var j = 0; j < size; j++) {
-        if (grid[i][j].isTarget() == true) {
-          if (grid[i][j].flagged== false && grid[i][j].revealed == false)  {
-            grid[i][j].flagged = true;
-            var arr = [i, j];
-            var index = checker.indexOf(arr);
-            if (index != -1) checker.splice(index, 1);
-            mineCount--;
-            document.getElementById("stats").innerHTML = mineCount;
-          }
-          else if (grid[i][j].flagged== true && grid[i][j].revealed == false)
-          {
-            mineCount++;
-            document.getElementById("stats").innerHTML = mineCount;
-            grid[i][j].flagged = false;
-          }
-          break;
-        }
-      }
-    }
-    console.log(checker);
-    displayGrid();
+    tryToFlag();
   }
   else if (mode == 2 || mode == 3)
   {
@@ -321,4 +323,42 @@ function whenMouseClicked()
     restartGame();
     mode = 0;
   }
+}
+
+function tryToFlag()
+{
+  var size = 10;
+  var index;
+  for (var i = 0; i < size; i++) {
+    for (var j = 0; j < size; j++) {
+      if (grid[i][j].isTarget() == true) {
+        if (grid[i][j].flagged== false && grid[i][j].revealed == false)  {
+          grid[i][j].flagged = true;
+          var arr = [i, j];
+          console.log(arr);
+          for (var a = 0; a < checker.length; a++)
+          {
+            if (checker[a] == arr) 
+            {
+              index = a;
+              break;
+            }
+          }
+          console.log(index);
+          if (index != -1) checker.splice(index, 1);
+          mineCount--;
+          document.getElementById("stats").innerHTML = mineCount;
+        }
+        else if (grid[i][j].flagged== true && grid[i][j].revealed == false)
+        {
+          mineCount++;
+          document.getElementById("stats").innerHTML = mineCount;
+          grid[i][j].flagged = false;
+        }
+        break;
+      }
+    }
+  }
+  console.log(checker);
+  displayGrid();
 }
