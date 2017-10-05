@@ -56,11 +56,11 @@ function wonGame()
   mode = 3;
   noStroke();
   fill(0, 0, 0, 180);
-  rect(0, 0, windowWidth, windowHeight);
+  rect(0, 0, width, height);
   fill(255);
   //stroke(255);
   textAlign(CENTER, CENTER);
-  text("YOU WON!\nCLICK TO RESTART GAME :D", windowWidth/2, windowHeight/2);
+  text("YOU WON!\nCLICK TO RESTART GAME :D", width/2, height/2);
   noLoop();
 }
 
@@ -69,11 +69,11 @@ function lostGame()
   console.log("LOST CALLED");
   noStroke();
   fill(0, 0, 0, 180);
-  rect(0, 0, windowWidth, windowHeight);
+  rect(0, 0, width, height);
   fill(255);
   //stroke(255);
   textAlign(CENTER, CENTER);
-  text("SHUCKS! CAUGHT A MINE!\nCLICK TO RESTART GAME :D", windowWidth/2, windowHeight/2);
+  text("SHUCKS! CAUGHT A MINE!\nCLICK TO RESTART GAME :D", width/2, height/2);
   noLoop();
 }
 
